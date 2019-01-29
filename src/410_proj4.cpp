@@ -86,7 +86,18 @@ void audit_results() {
 
 int main()
 {
-	//TODO your code here
+	//Below code written by Conner Davis, above by professor Keith Perkins
+	thread waiter(doWaiter, 1, "in4.txt");
+	thread baker(doBaker, 1);
+	thread baker2(doBaker, 2);
+	thread baker3(doBaker, 3);
+
+	waiter.join();
+	baker.join();
+	baker2.join();
+	baker3.join();
+
+	audit_results();
 	return SUCCESS;
 }
 

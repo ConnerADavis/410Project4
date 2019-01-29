@@ -10,23 +10,41 @@ Logger::~Logger() {
 
 //open close and clear the log file
 void Logger::clearlogfile() {
-	myFile.open(filename, std::fstream::trunc);
+	try
+	{
+		m.lock();
+		myFile.open(filename, std::fstream::trunc);
 
-	//close file
-	if (myFile.is_open())
-		myFile.close();
+		//close file
+		if (myFile.is_open())
+			myFile.close();
+		m.unlock();
+	}
+	catch(int e)
+	{
+		m.unlock();
+	}
 }
 
 void Logger::log(std::string data) {
-	myFile.open(filename, std::fstream::app);
-	if (!myFile.is_open())
-		return;
+	try
+	{
+		m.lock();
+		myFile.open(filename, std::fstream::app);
+		if (!myFile.is_open())
+			return;
 
-	std::string myline;
+		std::string myline;
 
-	myFile << data;
+		myFile << data;
 
-	//close file
-	if (myFile.is_open())
-		myFile.close();
+		//close file
+		if (myFile.is_open())
+			myFile.close();
+		m.unlock();
+	}
+	catch(int e)
+	{
+		m.unlock();
+	}
 }
